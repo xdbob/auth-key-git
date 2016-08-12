@@ -9,6 +9,8 @@ gitolite_user_shell = '/srv/git/bin/gitolite-shell'
 dn_group = 'cn=lse, ou=roles, dc=epita, dc=net'
 
 def main():
+    if len(sys.argv) < 2:
+      exit(0)
     username = sys.argv[1]
 
     try:
