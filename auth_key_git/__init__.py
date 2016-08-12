@@ -41,7 +41,7 @@ def main():
         for user in users:
           result = con.search_s(user.decode("ascii"), ldap.SCOPE_BASE, filter, attrs)
           for key in result[0][1]['sshPublicKey']:
-            print(ssh_options(result[0][1]['uid'][0], options), key.strip())
+            print(ssh_options(result[0][1]['uid'][0].decode("ascii"), options), key.strip().decode("ascii"))
 
       try:
         # XXX: sanity check missing, username exists
