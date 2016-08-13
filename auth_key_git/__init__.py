@@ -4,9 +4,9 @@ import ldap
 import sys
 from os.path import expanduser
 
-ldap_addr = 'ldaps://auth-1.pie.cri.epita.net'
+ldap_addr = 'ldaps://auth.pie.cri.epita.net'
 gitolite_user_shell = '/srv/git/bin/gitolite-shell'
-dn_group = 'cn=lse, ou=roles, dc=epita, dc=net'
+dn_group = 'ou=lse,ou=labos,dc=epita,dc=net'
 
 def main():
     if len(sys.argv) < 2:
@@ -29,19 +29,16 @@ def main():
           return ','.join([command(user)] + option)
 
         con = ldap.initialize(ldap_addr)
+        con.deref = ldap.DEREF_ALWAYS
 
-        filter = 'objectclass=groupOfNames'
-        attrs = ['member']
-        results = con.search_s(dn_group, ldap.SCOPE_SUBTREE, filter, attrs)
-
-        users = results[0][1]['member']
+        filter = 'uid=*'
         attrs = ['uid', 'sshPublicKey']
-        filter = 'objectClass=*'
+        users = con.search_s(dn_group, ldap.SCOPE_SUBTREE, filter, attrs)
 
         for user in users:
-          result = con.search_s(user.decode("ascii"), ldap.SCOPE_BASE, filter, attrs)
-          for key in result[0][1]['sshPublicKey']:
-            print(ssh_options(result[0][1]['uid'][0].decode("ascii"), options), key.strip().decode("ascii"))
+          if 'sshPublicKey' in user[1]:
+            for key in user[1]['sshPublicKey']:
+              print(ssh_options(user[1]['uid'][0].decode("ascii"), options), key.strip().decode("ascii"))
 
       try:
         # XXX: sanity check missing, username exists
