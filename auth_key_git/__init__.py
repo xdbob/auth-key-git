@@ -33,6 +33,12 @@ def main():
     if username != config.get('git', 'user'):
         exit(0)
 
+    try:
+        with open(expanduser('~%s/.ssh/authorized_keys' % username)) as f:
+            print(f.read())
+    except:
+        pass
+
     def command(user):
         return "command=\"%s %s\"" % (config.get('git', 'shell'), user)
 
