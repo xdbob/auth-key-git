@@ -5,6 +5,7 @@ import ldap
 import os
 import sys
 from os.path import expanduser
+import traceback
 
 
 def load_config():
@@ -37,6 +38,7 @@ def main():
         with open(expanduser('~%s/.ssh/authorized_keys' % username)) as f:
             print(f.read())
     except:
+        traceback.print_exc()
         pass
 
     def command(user):
@@ -61,6 +63,7 @@ def main():
                     options = ssh_options(user[1]['uid'][0].decode("ascii"), config.get('git', 'options'))
                     print(options, key.strip().decode("ascii"))
     except:
+        traceback.print_exc()
         pass
 
 
