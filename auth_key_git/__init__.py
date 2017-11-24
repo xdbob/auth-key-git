@@ -7,7 +7,7 @@ import sys
 from os.path import expanduser
 
 
-def load_config(filename):
+def load_config():
     defaults = {
         'shell': '/usr/lib/gitolite/gitolite-shell',
         'options': 'no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty',
@@ -29,7 +29,7 @@ def main():
         exit(0)
     username = sys.argv[1]
 
-    config = load_config('/etc/auth-key-git.conf')
+    config = load_config()
     if username != config.get('git', 'user'):
         exit(0)
 
